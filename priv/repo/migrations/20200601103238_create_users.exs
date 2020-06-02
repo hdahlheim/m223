@@ -8,11 +8,8 @@ defmodule GSGMS.Repo.Migrations.CreateUsers do
       add :email, :string
       add :password, :string
       add :version, :integer
-      add :role, references(:roles, on_delete: :nothing, type: :binary_id)
 
       timestamps()
     end
-
-    create index(:users, [:role])
   end
 end

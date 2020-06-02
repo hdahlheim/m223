@@ -12,6 +12,12 @@ defmodule GSGMS.Repo.Migrations.CreateTeams do
       timestamps()
     end
 
+    alter table(:players) do
+      add :team_id, references(:teams, on_delete: :nothing, type: :binary_id)
+    end
+
+    create index(:players, [:team_id])
+
     # create index(:teams, [:players])
     # create index(:teams, [:matches])
   end

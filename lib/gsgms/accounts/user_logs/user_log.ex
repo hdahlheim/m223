@@ -6,6 +6,7 @@ defmodule GSGMS.Accounts.UserLogs.UserLog do
 
   @primary_key {:id, :binary_id, autogenerate: true}
   @foreign_key_type :binary_id
+  @timestamps_opts [type: :utc_datetime_usec]
   schema "user_logs" do
     field :description, :string
     belongs_to :user, User

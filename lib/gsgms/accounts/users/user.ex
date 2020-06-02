@@ -7,11 +7,12 @@ defmodule GSGMS.Accounts.Users.User do
 
   @primary_key {:id, :binary_id, autogenerate: true}
   @foreign_key_type :binary_id
+  @timestamps_opts [type: :utc_datetime_usec]
   schema "users" do
     field :email, :string
     field :name, :string
     field :password, :string
-    field :version, :integer
+    field :version, :integer, default: 1
     belongs_to :role, Role
     has_many :logs, UserLog
 

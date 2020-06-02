@@ -3,17 +3,18 @@ defmodule GSGMS.Games.Players.Player do
   import Ecto.Changeset
 
   alias GSGMS.Games.Teams.Team
-  alias GSGMS.Attendenc.CheckIns.CheckIn
-  alias GSGMS.Attendenc.CheckOuts.CheckOut
+  alias GSGMS.Games.PlayerLogs.PlayerLog
 
   @primary_key {:id, :binary_id, autogenerate: true}
   @foreign_key_type :binary_id
+  @timestamps_opts [type: :utc_datetime_usec]
   schema "players" do
     field :code, :string
     field :name, :string
+    field :check_in, :utc_datetime_usec
+    field :check_out, :utc_datetime_usec
     belongs_to :team, Team
-    has_one :check_in, CheckIn
-    has_one :check_out, CheckOut
+    has_many :logs, PlayerLog
     field :version, :integer, default: 1
 
     timestamps()
@@ -27,9 +28,9 @@ defmodule GSGMS.Games.Players.Player do
   end
 
   @doc false
-  def changeset(:update, player, attrs) do
+  def changeset(player, attrs, :update) do
     player
-    |> cast(attrs, [:name, :code])
+    |> cast(attrs, [:name, :code, :check_in, :check_out])
     |> validate_required([:name, :code])
     |> optimistic_lock(:version)
   end

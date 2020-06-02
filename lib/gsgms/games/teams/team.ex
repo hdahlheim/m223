@@ -6,6 +6,7 @@ defmodule GSGMS.Games.Teams.Team do
 
   @primary_key {:id, :binary_id, autogenerate: true}
   @foreign_key_type :binary_id
+  @timestamps_opts [type: :utc_datetime_usec]
   schema "teams" do
     field :name, :string
     has_many :players, Player

@@ -12,6 +12,8 @@ config :gsgms,
   ecto_repos: [GSGMS.Repo],
   generators: [binary_id: true]
 
+config :gsgms, GSGMS.Repo, migration_timestamps: [type: :utc_datetime_usec]
+
 # Configures the endpoint
 config :gsgms, GSGMSWeb.Endpoint,
   url: [host: "localhost"],
