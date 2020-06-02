@@ -8,6 +8,9 @@ defmodule GSGMS.Games.Players do
   alias GSGMS.Repo
 
   alias GSGMS.Games.Players.Player
+  alias GSGMS.Games.PlayerLogs.PlayerLog
+
+  @topic "players"
 
   @doc """
   Returns the list of players.
@@ -36,7 +39,7 @@ defmodule GSGMS.Games.Players do
       ** (Ecto.NoResultsError)
 
   """
-  def get_player!(id), do: Repo.get!(Player, id)
+  def get_player!(id), do: Repo.get!(Player, id) |> Repo.preload(:logs)
 
   @doc """
   Creates a player.
@@ -54,17 +57,19 @@ defmodule GSGMS.Games.Players do
     multi =
       Multi.new()
       |> Multi.insert(:player, Player.changeset(%Player{}, attrs))
-
-    # |> Multi.insert(:log, Player.changeset(%Player{}, attrs))
+      |> Multi.insert(:log, fn %{player: player} ->
+        PlayerLog.changeset(%PlayerLog{}, %{
+          player: player,
+          description: "Player #{player.id} created"
+        })
+      end)
 
     case Repo.transaction(multi) do
-      {:ok, stuff} ->
-        IO.inspect(stuff)
-        stuff
+      {:ok, changes} ->
+        broadcast({:ok, changes.player}, :player_created)
 
-      {:error, stuff} ->
-        IO.inspect(stuff)
-        stuff
+      {:error, changes} ->
+        {:error, changes.player}
     end
   end
 
@@ -81,9 +86,25 @@ defmodule GSGMS.Games.Players do
 
   """
   def update_player(%Player{} = player, attrs) do
-    player
-    |> Player.changeset(attrs)
-    |> Repo.update()
+    multi =
+      Multi.new()
+      |> Multi.update(:player, Player.changeset(player, attrs, :update))
+      |> Multi.insert(:log, fn %{player: player_updated} ->
+        PlayerLog.changeset(%PlayerLog{}, %{
+          player: player_updated,
+          description: "Player #{player.id} was updated"
+        })
+      end)
+
+    case Repo.transaction(multi) do
+      {:ok, changes} ->
+        player = Repo.preload(changes.player, :logs)
+        IO.inspect(player)
+        broadcast({:ok, player}, :player_updated)
+
+      {:error, changes} ->
+        {:error, changes.player}
+    end
   end
 
   @doc """
@@ -112,11 +133,25 @@ defmodule GSGMS.Games.Players do
 
   """
   def change_player(%Player{} = player, attrs \\ %{}) do
-    Player.changeset(player, attrs)
+    Player.changeset(player, attrs, :update)
   end
 
-  defp broadcast({:error, _} = result), do: result
+  def subscribe() do
+    Phoenix.PubSub.subscribe(GSGMS.PubSub, @topic)
+  end
 
-  defp broadcast({:ok, user}) do
+  def subscribe(player_id) do
+    Phoenix.PubSub.subscribe(GSGMS.PubSub, @topic <> ":#{player_id}")
+  end
+
+  defp broadcast({:ok, player}, :player_created = event) do
+    Phoenix.PubSub.broadcast(GSGMS.PubSub, @topic, {event, player})
+    {:ok, player}
+  end
+
+  defp broadcast({:ok, player}, :player_updated = event) do
+    Phoenix.PubSub.broadcast(GSGMS.PubSub, @topic, {event, player})
+    Phoenix.PubSub.broadcast(GSGMS.PubSub, @topic <> ":#{player.id}", {event, player})
+    {:ok, player}
   end
 end
