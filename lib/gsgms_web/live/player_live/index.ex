@@ -7,8 +7,14 @@ defmodule GSGMSWeb.PlayerLive.Index do
 
   @impl true
   def mount(_params, _session, socket) do
-    if connected?(socket), do: Players.subscribe()
-    {:ok, assign(socket, players: list_players(), temporary_assigns: [:players])}
+    if connected?(socket), do: Games.subscribe_to(:players)
+
+    {:ok,
+     assign(socket,
+       players: list_players(),
+       update_behavior: "append",
+       temporary_assigns: [:players]
+     )}
   end
 
   @impl true
@@ -18,7 +24,16 @@ defmodule GSGMSWeb.PlayerLive.Index do
 
   @impl true
   def handle_info({:player_created, player}, socket) do
-    {:noreply, assign(socket, :players, [player])}
+    {:noreply, assign(socket, players: [player], update_behavior: "append")}
+  end
+
+  def handle_info({:player_updated, player}, socket) do
+    {:noreply, assign(socket, players: [player], update_behavior: "append")}
+  end
+
+  @impl true
+  def handle_info({:player_deleted, _}, socket) do
+    {:noreply, assign(socket, players: list_players(), update_behavior: "replace")}
   end
 
   defp apply_action(socket, :edit, %{"id" => id}) do
@@ -44,18 +59,22 @@ defmodule GSGMSWeb.PlayerLive.Index do
     player = Players.get_player!(id)
     {:ok, _} = Players.delete_player(player)
 
-    {:noreply, assign(socket, :players, list_players())}
+    socket =
+      assign(socket, players: list_players(), update_behavior: "replace")
+      |> put_flash(:info, "Player #{player.name} deleted")
+
+    {:noreply, socket}
   end
 
   @impl true
   def handle_event("check-in", %{"value" => player_id}, socket) do
-    IO.inspect(player_id)
+    Games.check_in_player(player_id)
     {:noreply, socket}
   end
 
   @impl true
   def handle_event("check-out", %{"value" => player_id}, socket) do
-    IO.inspect(player_id)
+    Games.check_out_player(player_id)
     {:noreply, socket}
   end
 

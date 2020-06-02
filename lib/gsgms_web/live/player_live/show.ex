@@ -1,6 +1,7 @@
 defmodule GSGMSWeb.PlayerLive.Show do
   use GSGMSWeb, :live_view
 
+  alias GSGMS.Games
   alias GSGMS.Games.Players
 
   @impl true
@@ -17,7 +18,7 @@ defmodule GSGMSWeb.PlayerLive.Show do
 
   @impl true
   def handle_params(%{"id" => id}, _, socket) do
-    if connected?(socket), do: Players.subscribe(id)
+    if connected?(socket), do: Games.subscribe_to(:players, with: id)
 
     {:noreply,
      socket
@@ -27,15 +28,13 @@ defmodule GSGMSWeb.PlayerLive.Show do
 
   @impl true
   def handle_event("check-in", %{"value" => player_id}, socket) do
-    # save_user(socket, socket.assigns.action, user_params)
-    IO.inspect(player_id)
+    Games.check_in_player(player_id)
     {:noreply, socket}
   end
 
   @impl true
   def handle_event("check-out", %{"value" => player_id}, socket) do
-    # save_user(socket, socket.assigns.action, user_params)
-    IO.inspect(player_id)
+    Games.check_out_player(player_id)
     {:noreply, socket}
   end
 
