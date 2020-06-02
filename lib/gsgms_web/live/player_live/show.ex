@@ -42,18 +42,10 @@ defmodule GSGMSWeb.PlayerLive.Show do
   defp page_title(:edit), do: "Edit Player"
 
   def is_checked_in?(player) do
-    if is_nil(player.check_in) do
-      false
-    else
-      true
-    end
+    !is_nil(player.check_in)
   end
 
   def is_checked_out?(player) do
-    if is_nil(player.check_out) do
-      false
-    else
-      true
-    end
+    !is_nil(player.check_out)
   end
 end
