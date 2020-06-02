@@ -18,6 +18,24 @@ defmodule GSGMSWeb.Router do
     pipe_through :browser
 
     live "/", PageLive, :index
+
+    live "/players", PlayerLive.Index, :index
+    live "/players/new", PlayerLive.Index, :new
+    live "/players/:id/edit", PlayerLive.Index, :edit
+    live "/players/:id", PlayerLive.Show, :show
+    live "/players/:id/show/edit", PlayerLive.Show, :edit
+
+    live "/users", UserLive.Index, :index
+    live "/users/new", UserLive.Index, :new
+    live "/users/:id/edit", UserLive.Index, :edit
+    live "/users/:id", UserLive.Show, :show
+    live "/users/:id/show/edit", UserLive.Show, :edit
+
+    live "/teams", TeamLive.Index, :index
+    live "/teams/new", TeamLive.Index, :new
+    live "/teams/:id/edit", TeamLive.Index, :edit
+    live "/teams/:id", TeamLive.Show, :show
+    live "/teams/:id/show/edit", TeamLive.Show, :edit
   end
 
   # Other scopes may use custom stacks.

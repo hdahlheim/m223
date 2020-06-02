@@ -1,0 +1,51 @@
+<h1>Listing Players</h1>
+
+<%= if @live_action in [:new, :edit] do %>
+  <%= live_modal @socket, GSGMSWeb.PlayerLive.FormComponent,
+    id: @player.id || :new,
+    title: @page_title,
+    action: @live_action,
+    player: @player,
+    return_to: Routes.player_index_path(@socket, :index) %>
+<% end %>
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Code</th>
+      <th>Check in</th>
+      <th>Check out</th>
+
+      <th></th>
+    </tr>
+  </thead>
+  <tbody id="players" phx-update="append">
+    <%= for player <- @players do %>
+      <tr id="player-<%= player.id %>">
+        <td><%= player.name %></td>
+        <td><%= player.code %></td>
+        <td><%= player.check_in %></td>
+        <td><%= player.check_out %></td>
+
+        <td>
+          <button
+            type="button"
+            value="<%= player.id %>"
+            phx-click="check-in"
+            >Check-in</button>
+          <button
+            type="button"
+            value="<%= player.id %>"
+            phx-click="check-out"
+            >Check-out</button>
+          <span><%= live_redirect "Show", to: Routes.player_show_path(@socket, :show, player) %></span>
+          <span><%= live_patch "Edit", to: Routes.player_index_path(@socket, :edit, player) %></span>
+          <span><%= link "Delete", to: "#", phx_click: "delete", phx_value_id: player.id, data: [confirm: "Are you sure?"] %></span>
+        </td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<span><%= live_patch "New Player", to: Routes.player_index_path(@socket, :new) %></span>

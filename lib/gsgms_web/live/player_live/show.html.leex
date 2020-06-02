@@ -1,0 +1,60 @@
+<div>
+  <h1><%= @player.name %></h1>
+</div>
+
+<%= if @live_action in [:edit] do %>
+  <%= live_modal @socket, GSGMSWeb.PlayerLive.FormComponent,
+    id: @player.id,
+    title: @page_title,
+    action: @live_action,
+    player: @player,
+    return_to: Routes.player_show_path(@socket, :show, @player) %>
+<% end %>
+
+<button
+  type="button"
+  value="<%= @player.id %>"
+  phx-click="check-in"
+  disabeld="<%= is_checked_in? @player %>"
+  >Check-in</button>
+<button
+  type="button"
+  value="<%= @player.id %>"
+  phx-click="check-out"
+  disabeld="<%= is_checked_out? @player %>"
+  >Check-out</button>
+
+<ul>
+
+  <li>
+    <strong>Name:</strong>
+    <%= @player.name %>
+  </li>
+
+  <li>
+    <strong>Code:</strong>
+    <%= @player.code %>
+  </li>
+
+  <li>
+    <strong>Check in:</strong>
+    <%= @player.check_in %>
+  </li>
+
+  <li>
+    <strong>Check out:</strong>
+    <%= @player.check_out %>
+  </li>
+
+</ul>
+
+<%= if true do %>
+  <ul>
+    <%= for log <- @player.logs do %>
+      <li><%= log.description %><%= log.inserted_at %></li>
+    <% end %>
+  </ul>
+<% end %>
+
+<span><%= live_patch "Edit", to: Routes.player_show_path(@socket, :edit, @player), class: "button" %></span>
+<span><%= live_redirect "Back", to: Routes.player_index_path(@socket, :index) %></span>
