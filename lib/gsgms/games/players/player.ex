@@ -1,9 +1,9 @@
-defmodule GSGMS.Games.Players.Player do
+defmodule GSGMS.Tournament.Players.Player do
   use Ecto.Schema
   import Ecto.Changeset
 
-  alias GSGMS.Games.Teams.Team
-  alias GSGMS.Games.PlayerLogs.PlayerLog
+  alias GSGMS.Tournament.Teams.Team
+  alias GSGMS.Tournament.PlayerLogs.PlayerLog
 
   @primary_key {:id, :binary_id, autogenerate: true}
   @foreign_key_type :binary_id

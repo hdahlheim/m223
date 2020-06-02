@@ -1,4 +1,4 @@
-defmodule GSGMS.Games.Teams do
+defmodule GSGMS.Tournament.Teams do
   @moduledoc """
   The Games.Teams context.
   """
@@ -6,7 +6,7 @@ defmodule GSGMS.Games.Teams do
   import Ecto.Query, warn: false
   alias GSGMS.Repo
 
-  alias GSGMS.Games.Teams.Team
+  alias GSGMS.Tournament.Teams.Team
 
   @doc """
   Returns the list of teams.

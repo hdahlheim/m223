@@ -1,7 +1,7 @@
 defmodule GSGMSWeb.TeamLive.Show do
   use GSGMSWeb, :live_view
 
-  alias GSGMS.Games.Teams
+  alias GSGMS.Tournament.Teams
 
   @impl true
   def mount(_params, _session, socket) do

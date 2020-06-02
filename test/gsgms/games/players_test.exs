@@ -1,10 +1,10 @@
-defmodule GSGMS.Games.PlayersTest do
+defmodule GSGMS.Tournament.PlayersTest do
   use GSGMS.DataCase
 
-  alias GSGMS.Games.Players
+  alias GSGMS.Tournament.Players
 
   describe "players" do
-    alias GSGMS.Games.Players.Player
+    alias GSGMS.Tournament.Players.Player
 
     @valid_attrs %{code: "some code", name: "some name"}
     @update_attrs %{code: "some updated code", name: "some updated name"}

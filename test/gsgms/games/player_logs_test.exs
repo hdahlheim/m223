@@ -1,10 +1,10 @@
-defmodule GSGMS.Games.PlayerLogsTest do
+defmodule GSGMS.Tournament.PlayerLogsTest do
   use GSGMS.DataCase
 
-  alias GSGMS.Games.PlayerLogs
+  alias GSGMS.Tournament.PlayerLogs
 
   describe "player_logs" do
-    alias GSGMS.Games.PlayerLogs.PlayerLog
+    alias GSGMS.Tournament.PlayerLogs.PlayerLog
 
     @valid_attrs %{description: "some description"}
     @update_attrs %{description: "some updated description"}
@@ -40,13 +40,19 @@ defmodule GSGMS.Games.PlayerLogsTest do
 
     test "update_player_log/2 with valid data updates the player_log" do
       player_log = player_log_fixture()
-      assert {:ok, %PlayerLog{} = player_log} = PlayerLogs.update_player_log(player_log, @update_attrs)
+
+      assert {:ok, %PlayerLog{} = player_log} =
+               PlayerLogs.update_player_log(player_log, @update_attrs)
+
       assert player_log.description == "some updated description"
     end
 
     test "update_player_log/2 with invalid data returns error changeset" do
       player_log = player_log_fixture()
-      assert {:error, %Ecto.Changeset{}} = PlayerLogs.update_player_log(player_log, @invalid_attrs)
+
+      assert {:error, %Ecto.Changeset{}} =
+               PlayerLogs.update_player_log(player_log, @invalid_attrs)
+
       assert player_log == PlayerLogs.get_player_log!(player_log.id)
     end
 

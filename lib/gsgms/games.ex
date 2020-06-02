@@ -1,4 +1,4 @@
-defmodule GSGMS.Games do
+defmodule GSGMS.Tournament do
   alias __MODULE__.Players
 
   defdelegate get_players(), to: Players, as: :list_players

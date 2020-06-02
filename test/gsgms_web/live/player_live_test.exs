@@ -3,10 +3,20 @@ defmodule GSGMSWeb.PlayerLiveTest do
 
   import Phoenix.LiveViewTest
 
-  alias GSGMS.Games.Players
+  alias GSGMS.Tournament.Players
 
-  @create_attrs %{check_in: "2010-04-17T14:00:00Z", check_out: "2010-04-17T14:00:00Z", code: "some code", name: "some name"}
-  @update_attrs %{check_in: "2011-05-18T15:01:01Z", check_out: "2011-05-18T15:01:01Z", code: "some updated code", name: "some updated name"}
+  @create_attrs %{
+    check_in: "2010-04-17T14:00:00Z",
+    check_out: "2010-04-17T14:00:00Z",
+    code: "some code",
+    name: "some name"
+  }
+  @update_attrs %{
+    check_in: "2011-05-18T15:01:01Z",
+    check_out: "2011-05-18T15:01:01Z",
+    code: "some updated code",
+    name: "some updated name"
+  }
   @invalid_attrs %{check_in: nil, check_out: nil, code: nil, name: nil}
 
   defp fixture(:player) do

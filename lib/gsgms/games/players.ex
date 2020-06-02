@@ -1,4 +1,4 @@
-defmodule GSGMS.Games.Players do
+defmodule GSGMS.Tournament.Players do
   @moduledoc """
   The Games.Players context.
   """
@@ -7,8 +7,8 @@ defmodule GSGMS.Games.Players do
   alias Ecto.Multi
   alias GSGMS.Repo
 
-  alias GSGMS.Games.Players.Player
-  alias GSGMS.Games.PlayerLogs.PlayerLog
+  alias GSGMS.Tournament.Players.Player
+  alias GSGMS.Tournament.PlayerLogs.PlayerLog
 
   @topic "players"
 

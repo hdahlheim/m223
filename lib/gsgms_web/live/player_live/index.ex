@@ -1,9 +1,9 @@
 defmodule GSGMSWeb.PlayerLive.Index do
   use GSGMSWeb, :live_view
 
-  alias GSGMS.Games
-  alias GSGMS.Games.Players
-  alias GSGMS.Games.Players.Player
+  alias GSGMS.Tournament
+  alias GSGMS.Tournament.Players
+  alias GSGMS.Tournament.Players.Player
 
   @impl true
   def mount(_params, _session, socket) do

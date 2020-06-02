@@ -3,7 +3,7 @@ defmodule GSGMSWeb.TeamLiveTest do
 
   import Phoenix.LiveViewTest
 
-  alias GSGMS.Games.Teams
+  alias GSGMS.Tournament.Teams
 
   @create_attrs %{name: "some name"}
   @update_attrs %{name: "some updated name"}

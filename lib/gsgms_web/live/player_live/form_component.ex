@@ -1,7 +1,7 @@
 defmodule GSGMSWeb.PlayerLive.FormComponent do
   use GSGMSWeb, :live_component
 
-  alias GSGMS.Games.Players
+  alias GSGMS.Tournament.Players
 
   @impl true
   def update(%{player: player} = assigns, socket) do

@@ -1,4 +1,4 @@
-defmodule GSGMS.Games.PlayerLogs do
+defmodule GSGMS.Tournament.PlayerLogs do
   @moduledoc """
   The Games.PlayerLogs context.
   """
@@ -6,7 +6,7 @@ defmodule GSGMS.Games.PlayerLogs do
   import Ecto.Query, warn: false
   alias GSGMS.Repo
 
-  alias GSGMS.Games.PlayerLogs.PlayerLog
+  alias GSGMS.Tournament.PlayerLogs.PlayerLog
 
   @doc """
   Returns the list of player_logs.

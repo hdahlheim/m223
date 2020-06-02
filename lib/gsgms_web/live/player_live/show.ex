@@ -1,8 +1,8 @@
 defmodule GSGMSWeb.PlayerLive.Show do
   use GSGMSWeb, :live_view
 
-  alias GSGMS.Games
-  alias GSGMS.Games.Players
+  alias GSGMS.Tournament
+  alias GSGMS.Tournament.Players
 
   @impl true
   def mount(_params, _session, socket) do
@@ -18,7 +18,7 @@ defmodule GSGMSWeb.PlayerLive.Show do
 
   @impl true
   def handle_params(%{"id" => id}, _, socket) do
-    if connected?(socket), do: Games.subscribe_to(:players, with: id)
+    if connected?(socket), do: Tournament.subscribe_to(:players, with: id)
 
     {:noreply,
      socket
@@ -28,13 +28,13 @@ defmodule GSGMSWeb.PlayerLive.Show do
 
   @impl true
   def handle_event("check-in", %{"value" => player_id}, socket) do
-    Games.check_in_player(player_id)
+    Tournament.check_in_player(player_id)
     {:noreply, socket}
   end
 
   @impl true
   def handle_event("check-out", %{"value" => player_id}, socket) do
-    Games.check_out_player(player_id)
+    Tournament.check_out_player(player_id)
     {:noreply, socket}
   end
 
