@@ -133,11 +133,7 @@ defmodule GSGMS.Tournament.Players do
   def check_in_player(id, time) do
     Multi.new()
     |> Multi.run(:get_player, fn _, _ ->
-      player =
-        Repo.get!(Player, id)
-        |> Repo.preload(:logs)
-
-      {:ok, player}
+      {:ok, Repo.get!(Player, id)}
     end)
     |> Multi.update(:player, fn %{get_player: player} ->
       Player.changeset(player, %{check_in: time}, :update)
@@ -149,11 +145,7 @@ defmodule GSGMS.Tournament.Players do
   def check_out_player(id, time) do
     Multi.new()
     |> Multi.run(:get_player, fn _, _ ->
-      player =
-        Repo.get!(Player, id)
-        |> Repo.preload(:logs)
-
-      {:ok, player}
+      {:ok, Repo.get!(Player, id)}
     end)
     |> Multi.update(:player, fn %{get_player: player} ->
       Player.changeset(player, %{check_out: time}, :update)

@@ -7,7 +7,7 @@ defmodule GSGMSWeb.PlayerLive.Index do
 
   @impl true
   def mount(_params, _session, socket) do
-    if connected?(socket), do: Games.subscribe_to(:players)
+    if connected?(socket), do: Tournament.subscribe_to(:players)
 
     {:ok,
      assign(socket,
@@ -68,17 +68,17 @@ defmodule GSGMSWeb.PlayerLive.Index do
 
   @impl true
   def handle_event("check-in", %{"value" => player_id}, socket) do
-    Games.check_in_player(player_id)
+    Tournament.check_in_player(player_id)
     {:noreply, socket}
   end
 
   @impl true
   def handle_event("check-out", %{"value" => player_id}, socket) do
-    Games.check_out_player(player_id)
+    Tournament.check_out_player(player_id)
     {:noreply, socket}
   end
 
   defp list_players do
-    Games.get_players()
+    Tournament.get_players()
   end
 end

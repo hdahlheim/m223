@@ -11,9 +11,7 @@ defmodule GSGMSWeb.PlayerLive.Show do
 
   @impl true
   def handle_info({:player_updated, player}, socket) do
-    {:noreply,
-     socket
-     |> assign(:player, player)}
+    {:noreply, assign(socket, :player, Players.get_player!(player.id))}
   end
 
   @impl true
