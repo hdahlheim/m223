@@ -42,17 +42,11 @@ defmodule GSGMS.Tournament.Players do
     Repo.all(Player)
   end
 
-  def list_players(condition) do
-    query = from(p in Player)
-
+  def list_players_without_team do
     query =
-      case condition do
-        :without_team ->
-          from p in query, where: is_nil(p.team_id), select: %{name: p.name, id: p.id}
-
-        _ ->
-          query
-      end
+      from p in Player,
+        where: is_nil(p.team_id),
+        select: %{name: p.name, id: p.id}
 
     Repo.all(query)
   end
@@ -98,7 +92,8 @@ defmodule GSGMS.Tournament.Players do
         description: "Player #{&1.player.name} was created"
       })
     )
-    |> run_and_broadcast(:created)
+    |> Repo.transaction()
+    |> process_result(:created)
   end
 
   @doc """
@@ -123,7 +118,8 @@ defmodule GSGMS.Tournament.Players do
         description: "Player #{&1.player.name} info was updated"
       })
     )
-    |> run_and_broadcast(:updated)
+    |> Repo.transaction()
+    |> process_result(:updated)
   end
 
   @doc """
@@ -161,8 +157,8 @@ defmodule GSGMS.Tournament.Players do
     Player.changeset(player, attrs, :update)
   end
 
-  defp run_and_broadcast(%Multi{} = multi, broadcastEvent) do
-    case Repo.transaction(multi) do
+  defp process_result(result, broadcastEvent) do
+    case result do
       {:ok, %{player: player}} ->
         broadcast({:ok, player}, broadcastEvent)
 
