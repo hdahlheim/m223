@@ -11,7 +11,7 @@ defmodule GSGMS.Tournament.Teams do
   def topic, do: "teams"
   def topic(id), do: "teams:#{id}"
 
-  def subscribe() do
+  def subscribe do
     Phoenix.PubSub.subscribe(GSGMS.PubSub, topic())
   end
 
@@ -46,7 +46,8 @@ defmodule GSGMS.Tournament.Teams do
       ** (Ecto.NoResultsError)
 
   """
-  def get_team!(id), do: Repo.get!(Team, id) |> Repo.preload(:players)
+  def get_team!(id), do: Repo.get!(Team, id)
+  def get_team_with_players!(id), do: Repo.get!(Team, id) |> Repo.preload(:players)
 
   @doc """
   Creates a team.

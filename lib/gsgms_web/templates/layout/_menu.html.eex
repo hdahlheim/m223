@@ -1,0 +1,7 @@
+<ul>
+<%= if @current_user do %>
+  <li><%= link "Players", to: Routes.player_index_path(@conn, :index) %></li>
+  <li><%= link "Teams", to: Routes.team_index_path(@conn, :index) %></li>
+  <%# <li><%= link "Users", to: Routes.user_index_path(@conn, :index) %></li>
+<% end %>
+</ul>

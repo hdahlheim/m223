@@ -19,6 +19,7 @@ defmodule GSGMS.Tournament.PlayerLogs do
   """
   def list_player_logs do
     Repo.all(PlayerLog)
+    |> Repo.preload(:player)
   end
 
   @doc """
@@ -35,7 +36,7 @@ defmodule GSGMS.Tournament.PlayerLogs do
       ** (Ecto.NoResultsError)
 
   """
-  def get_player_log!(id), do: Repo.get!(PlayerLog, id)
+  def get_player_log!(id), do: Repo.get!(PlayerLog, id) |> Repo.preload(:player)
 
   @doc """
   Creates a player_log.
@@ -53,24 +54,6 @@ defmodule GSGMS.Tournament.PlayerLogs do
     %PlayerLog{}
     |> PlayerLog.changeset(attrs)
     |> Repo.insert()
-  end
-
-  @doc """
-  Updates a player_log.
-
-  ## Examples
-
-      iex> update_player_log(player_log, %{field: new_value})
-      {:ok, %PlayerLog{}}
-
-      iex> update_player_log(player_log, %{field: bad_value})
-      {:error, %Ecto.Changeset{}}
-
-  """
-  def update_player_log(%PlayerLog{} = player_log, attrs) do
-    player_log
-    |> PlayerLog.changeset(attrs)
-    |> Repo.update()
   end
 
   @doc """

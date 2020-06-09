@@ -15,10 +15,17 @@ defmodule GSGMS.Tournament.PlayerLogs.PlayerLog do
   end
 
   @doc false
+  def changeset(player_log, %{player: player} = attrs) do
+    player_log
+    |> cast(attrs, [:description])
+    |> validate_required([:description])
+    |> put_assoc(:player, player)
+  end
+
+  @doc false
   def changeset(player_log, attrs) do
     player_log
     |> cast(attrs, [:description])
-    |> put_assoc(:player, attrs.player)
     |> validate_required([:description])
   end
 end

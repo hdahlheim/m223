@@ -29,7 +29,6 @@ defmodule GSGMSWeb.PlayerLive.Index do
 
   @impl true
   def handle_info({:player_event, :updated, player}, socket) do
-    IO.inspect(player)
     {:noreply, assign(socket, players: [player], update_behavior: "append")}
   end
 

@@ -30,7 +30,7 @@ defmodule GSGMSWeb.PlayerLiveTest do
   end
 
   describe "Index" do
-    setup [:create_player]
+    setup [:create_player, :register_and_login_user]
 
     test "lists all players", %{conn: conn, player: player} do
       {:ok, _index_live, html} = live(conn, Routes.player_index_path(conn, :index))
@@ -92,7 +92,7 @@ defmodule GSGMSWeb.PlayerLiveTest do
   end
 
   describe "Show" do
-    setup [:create_player]
+    setup [:create_player, :register_and_login_user]
 
     test "displays player", %{conn: conn, player: player} do
       {:ok, _show_live, html} = live(conn, Routes.player_show_path(conn, :show, player))

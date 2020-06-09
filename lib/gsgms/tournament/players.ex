@@ -17,7 +17,7 @@ defmodule GSGMS.Tournament.Players do
   Subscribe to creation, update and deletion events
   that happen on the player table.
   """
-  def subscribe() do
+  def subscribe do
     Phoenix.PubSub.subscribe(GSGMS.PubSub, topic())
   end
 
@@ -71,9 +71,10 @@ defmodule GSGMS.Tournament.Players do
       ** (Ecto.NoResultsError)
 
   """
-  def get_player!(id), do: Repo.get!(Player, id) |> Repo.preload([:team, :logs])
+  def get_player!(id), do: Repo.get!(Player, id)
   def get_player_with_logs!(id), do: Repo.get!(Player, id) |> Repo.preload(:logs)
   def get_player_with_team!(id), do: Repo.get!(Player, id) |> Repo.preload(:team)
+  def get_player_with_associations!(id), do: Repo.get!(Player, id) |> Repo.preload([:team, :logs])
 
   @doc """
   Creates a player.
@@ -142,7 +143,7 @@ defmodule GSGMS.Tournament.Players do
       {:ok, player} ->
         broadcast({:ok, player}, :deleted)
 
-      {:error, player} ->
+      {:error, :player, player, _} ->
         {:error, player}
     end
   end
@@ -162,11 +163,11 @@ defmodule GSGMS.Tournament.Players do
 
   defp run_and_broadcast(%Multi{} = multi, broadcastEvent) do
     case Repo.transaction(multi) do
-      {:ok, changes} ->
-        broadcast({:ok, changes.player}, broadcastEvent)
+      {:ok, %{player: player}} ->
+        broadcast({:ok, player}, broadcastEvent)
 
-      {:error, changes} ->
-        {:error, changes.player}
+      {:error, :player, player, _} ->
+        {:error, player}
     end
   end
 

@@ -20,7 +20,7 @@ defmodule GSGMSWeb.TeamLiveTest do
   end
 
   describe "Index" do
-    setup [:create_team]
+    setup [:create_team, :register_and_login_user]
 
     test "lists all teams", %{conn: conn, team: team} do
       {:ok, _index_live, html} = live(conn, Routes.team_index_path(conn, :index))

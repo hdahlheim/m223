@@ -66,12 +66,10 @@ defmodule GSGMS.Tournament.Management do
     |> Repo.transaction()
     |> case do
       {:ok, %{add_check_out: player}} = changes ->
-        IO.inspect(player)
         Players.broadcast({:ok, player}, :updated)
         changes
 
-      {:error, action, value, other} = result ->
-        IO.inspect({action, value, other})
+      {:error, _action, _value, _other} = result ->
         result
     end
   end
