@@ -25,20 +25,25 @@
       <tr id="player-<%= player.id %>">
         <td><%= player.name %></td>
         <td><%= player.code %></td>
-        <td><%= player.check_in %></td>
-        <td><%= player.check_out %></td>
-
         <td>
-          <button
-            type="button"
-            value="<%= player.id %>"
-            phx-click="check-in"
-            >Check-in</button>
-          <button
-            type="button"
-            value="<%= player.id %>"
-            phx-click="check-out"
-            >Check-out</button>
+        <%= if is_nil player.check_in do %>
+          <button type="button" value="<%= player.id %>" phx-click="check-in">
+            Check-in
+          </button>
+        <% else %>
+          <%= player.check_in %>
+        <% end %>
+        </td>
+        <td>
+        <%= if is_nil player.check_out do %>
+          <button type="button" value="<%= player.id %>" phx-click="check-out">
+            Check-out
+          </button>
+        <% else %>
+          <%= player.check_out %>
+        <% end %>
+        </td>
+        <td>
           <span><%= live_redirect "Show", to: Routes.player_show_path(@socket, :show, player) %></span>
           <span><%= live_patch "Edit", to: Routes.player_index_path(@socket, :edit, player) %></span>
           <span><%= link "Delete", to: "#", phx_click: "delete", phx_value_id: player.id, data: [confirm: "Are you sure?"] %></span>

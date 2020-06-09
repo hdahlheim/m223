@@ -25,35 +25,49 @@
   >Check-out</button>
 
 <ul>
-
   <li>
     <strong>Name:</strong>
     <%= @player.name %>
   </li>
-
   <li>
     <strong>Code:</strong>
     <%= @player.code %>
   </li>
-
   <li>
     <strong>Check in:</strong>
     <%= @player.check_in %>
   </li>
-
   <li>
     <strong>Check out:</strong>
     <%= @player.check_out %>
   </li>
-
+  <li>
+    <strong>Team</strong>
+    <%= if is_nil @player.team do %>
+      -
+    <% else %>
+    <%= @player.team.name %>
+    <% end %>
+  </li>
 </ul>
 
+<%= if is_nil @player.team do %>
+<h2>Add to team</h2>
+  <form phx-submit="add-team">
+    <select name="team-id" id="select_team">
+      <%= options_for_select team_options(), nil %>
+    </select>
+    <button type="submit">Add</button>
+</form>
+<% end %>
+
+
 <%= if true do %>
-  <ul>
-    <%= for log <- @player.logs do %>
-      <li><%= log.description %><%= log.inserted_at %></li>
-    <% end %>
-  </ul>
+<ul>
+  <%= for log <- @player.logs do %>
+    <li><%= log.description %> <%= Date.to_iso8601(log.inserted_at) %></li>
+  <% end %>
+</ul>
 <% end %>
 
 <span><%= live_patch "Edit", to: Routes.player_show_path(@socket, :edit, @player), class: "button" %></span>

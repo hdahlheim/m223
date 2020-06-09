@@ -1,11 +1,13 @@
 defmodule GSGMSWeb.TeamLive.Index do
   use GSGMSWeb, :live_view
 
+  alias GSGMS.Tournament
   alias GSGMS.Tournament.Teams
   alias GSGMS.Tournament.Teams.Team
 
   @impl true
   def mount(_params, _session, socket) do
+    Tournament.subscribe_to(:teams)
     {:ok, assign(socket, :teams, list_teams())}
   end
 
@@ -14,10 +16,20 @@ defmodule GSGMSWeb.TeamLive.Index do
     {:noreply, apply_action(socket, socket.assigns.live_action, params)}
   end
 
+  @impl true
+  def handle_info({:team_event, :created, team}, socket) do
+    {:noreply, assign(socket, :teams, [team])}
+  end
+
+  @impl true
+  def handle_info(_, socket) do
+    {:noreply, socket}
+  end
+
   defp apply_action(socket, :edit, %{"id" => id}) do
     socket
     |> assign(:page_title, "Edit Team")
-    |> assign(:team, Teams.get_team!(id))
+    |> assign(:team, Tournament.get_team!(id))
   end
 
   defp apply_action(socket, :new, _params) do
@@ -34,13 +46,13 @@ defmodule GSGMSWeb.TeamLive.Index do
 
   @impl true
   def handle_event("delete", %{"id" => id}, socket) do
-    team = Teams.get_team!(id)
+    team = Tournament.get_team!(id)
     {:ok, _} = Teams.delete_team(team)
 
     {:noreply, assign(socket, :teams, list_teams())}
   end
 
   defp list_teams do
-    Teams.list_teams()
+    Tournament.get_teams()
   end
 end

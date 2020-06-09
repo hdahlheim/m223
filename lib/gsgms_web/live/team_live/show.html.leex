@@ -18,5 +18,26 @@
 
 </ul>
 
+  <h2>Players</h2>
+  <ul>
+    <%= for player <- @team.players do %>
+    <li>
+      <%= player.name %>
+    </li>
+    <% end %>
+  </ul>
+
+
+  <h2>Add Player</h2>
+  <form phx-submit="add-player">
+    <select name="player-id" id="select_player">
+      <option value="" disabeld="true">Chose a player</option>
+      <%= options_for_select player_options(@players), nil %>
+    </select>
+    <button type="submit">Add</button>
+  </form>
+
+
+
 <span><%= live_patch "Edit", to: Routes.team_show_path(@socket, :edit, @team), class: "button" %></span>
 <span><%= live_redirect "Back", to: Routes.team_index_path(@socket, :index) %></span>

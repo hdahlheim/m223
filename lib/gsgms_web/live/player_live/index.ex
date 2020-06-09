@@ -23,17 +23,24 @@ defmodule GSGMSWeb.PlayerLive.Index do
   end
 
   @impl true
-  def handle_info({:player_created, player}, socket) do
-    {:noreply, assign(socket, players: [player], update_behavior: "append")}
-  end
-
-  def handle_info({:player_updated, player}, socket) do
+  def handle_info({:player_event, :created, player}, socket) do
     {:noreply, assign(socket, players: [player], update_behavior: "append")}
   end
 
   @impl true
-  def handle_info({:player_deleted, _}, socket) do
+  def handle_info({:player_event, :updated, player}, socket) do
+    IO.inspect(player)
+    {:noreply, assign(socket, players: [player], update_behavior: "append")}
+  end
+
+  @impl true
+  def handle_info({:player_event, :deleted, _}, socket) do
     {:noreply, assign(socket, players: list_players(), update_behavior: "replace")}
+  end
+
+  @impl true
+  def handle_info(_, socket) do
+    {:noreply, socket}
   end
 
   defp apply_action(socket, :edit, %{"id" => id}) do

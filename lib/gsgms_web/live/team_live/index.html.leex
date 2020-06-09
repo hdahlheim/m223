@@ -17,7 +17,7 @@
       <th></th>
     </tr>
   </thead>
-  <tbody id="teams">
+  <tbody id="teams" phx-update="append">
     <%= for team <- @teams do %>
       <tr id="team-<%= team.id %>">
         <td><%= team.name %></td>
