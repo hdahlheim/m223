@@ -1,15 +1,28 @@
-<h1>Forgot your password?</h1>
+<div class="max-w-md px-8 py-6 mx-auto mt-10 text-gray-800 bg-white rounded shadow">
+  <div class="space-y-4">
+    <h1 class="text-3xl font-bold">Forgot your password?</h1>
 
-<%= form_for :user, Routes.user_reset_password_path(@conn, :create), fn f -> %>
-  <%= label f, :email %>
-  <%= text_input f, :email, required: true %>
+    <%= form_for :user, Routes.user_reset_password_path(@conn, :create), fn f -> %>
+      <div class="space-y-4">
+        <div>
+          <%= label f, :email, class: "block font-semibold text-sm" %>
+          <%= text_input f, :email, required: true, class: "form-input w-full" %>
+        </div>
+        <div>
+          <span class="shadow-sm">
+            <%=
+              submit "Send instructions to reset password",
+              class: "w-full py-2 text-white bg-indigo-500 shadow rounded font-semibold transition-colors ease-in duration-100 hover:bg-indigo-600"
+            %>
+          </span>
+        </div>
+      </div>
+    <% end %>
 
-  <div>
-    <%= submit "Send instructions to reset password" %>
+    <p class="text-center">
+      <%=  link "Login", to: Routes.user_session_path(@conn, :new), class: "text-indigo-500 hover:text-indigo-400" %>
+      <span class="text-gray-300"> |</span>
+      <%= link "Register", to: Routes.user_registration_path(@conn, :new), class: "text-indigo-500 hover:text-indigo-400" %>
+    </p>
   </div>
-<% end %>
-
-<p>
-  <%= link "Register", to: Routes.user_registration_path(@conn, :new) %> |
-  <%= link "Login", to: Routes.user_session_path(@conn, :new) %>
-</p>
+</div>

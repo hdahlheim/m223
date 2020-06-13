@@ -1,49 +1,73 @@
-<h1>Settings</h1>
+<div class="max-w-3xl space-y-4 text-gray-800">
+  <h1 class="mt-4 text-4xl font-bold">Settings</h1>
 
-<h3>Change e-mail</h3>
+  <div class="flex justify-between px-6 py-4 bg-white rounded shadow">
+    <h3 class="text-lg font-semibold">Email</h3>
+    <div class="w-2/3">
+    <%= form_for @email_changeset, Routes.user_settings_path(@conn, :update_email), fn f -> %>
+      <%= if @email_changeset.action do %>
+        <div class="alert alert-danger">
+          <p>Oops, something went wrong! Please check the errors below.</p>
+        </div>
+      <% end %>
+      <div class="space-y-4">
+        <div class="space-y-2">
+          <%= label f, :email, class: "block text-semibold text-sm" %>
+          <%= text_input f, :email, required: true, class: "form-input w-full" %>
+          <%= error_tag f, :email %>
+        </div>
 
-<%= form_for @email_changeset, Routes.user_settings_path(@conn, :update_email), fn f -> %>
-  <%= if @email_changeset.action do %>
-    <div class="alert alert-danger">
-      <p>Oops, something went wrong! Please check the errors below.</p>
+        <div class="space-y-2">
+          <%= label f, :current_password, for: "current_password_for_email", class: "block text-semibold text-sm" %>
+          <%= password_input f, :current_password, required: true, name: "current_password", id: "current_password_for_email", class: "form-input w-full" %>
+          <%= error_tag f, :current_password %>
+        </div>
+
+        <div class="flex justify-end">
+          <span class="shadow-sm">
+          <%= submit "Save", class: "px-4 py-2 bg-indigo-500 rounded text-white shadow" %>
+          </span>
+        </div>
+      </div>
+    <% end %>
     </div>
-  <% end %>
-
-  <%= label f, :email %>
-  <%= text_input f, :email, required: true %>
-  <%= error_tag f, :email %>
-
-  <%= label f, :current_password, for: "current_password_for_email" %>
-  <%= password_input f, :current_password, required: true, name: "current_password", id: "current_password_for_email" %>
-  <%= error_tag f, :current_password %>
-
-  <div>
-    <%= submit "Change e-mail" %>
   </div>
-<% end %>
 
-<h3>Change password</h3>
+  <div class="flex justify-between px-6 py-4 bg-white rounded shadow">
+    <h3 class="text-lg font-semibold">Change password</h3>
+    <div class="w-2/3">
+      <%= form_for @password_changeset, Routes.user_settings_path(@conn, :update_password), fn f -> %>
+        <%= if @password_changeset.action do %>
+          <div class="alert alert-danger">
+            <p>Oops, something went wrong! Please check the errors below.</p>
+          </div>
+        <% end %>
+      <div class="space-y-4">
+        <div class="space-y-2">
+          <%= label f, :password, "New password", class: "block text-semibold text-sm"  %>
+          <%= password_input f, :password, required: true, class: "form-input w-full" %>
+          <%= error_tag f, :password %>
+        </div>
 
-<%= form_for @password_changeset, Routes.user_settings_path(@conn, :update_password), fn f -> %>
-  <%= if @password_changeset.action do %>
-    <div class="alert alert-danger">
-      <p>Oops, something went wrong! Please check the errors below.</p>
+        <div class="space-y-2">
+        <%= label f, :password_confirmation, "Confirm new password", class: "block text-semibold text-sm"  %>
+        <%= password_input f, :password_confirmation, required: true, class: "form-input w-full" %>
+        <%= error_tag f, :password_confirmation %>
+        </div>
+
+        <div class="space-y-2">
+        <%= label f, :current_password, for: "current_password_for_password", class: "block text-semibold text-sm"  %>
+        <%= password_input f, :current_password, required: true, name: "current_password", id: "current_password_for_password", class: "form-input w-full" %>
+        <%= error_tag f, :current_password %>
+        </div>
+
+        <div class="flex justify-end">
+          <span class="shadow-sm">
+            <%= submit "Save", class: "px-4 py-2 bg-indigo-500 rounded text-white shadow" %>
+          <span>
+        </div>
+      </div>
+      <% end %>
     </div>
-  <% end %>
-
-  <%= label f, :password, "New password" %>
-  <%= password_input f, :password, required: true %>
-  <%= error_tag f, :password %>
-
-  <%= label f, :password_confirmation, "Confirm new password" %>
-  <%= password_input f, :password_confirmation, required: true %>
-  <%= error_tag f, :password_confirmation %>
-
-  <%= label f, :current_password, for: "current_password_for_password" %>
-  <%= password_input f, :current_password, required: true, name: "current_password", id: "current_password_for_password" %>
-  <%= error_tag f, :current_password %>
-
-  <div>
-    <%= submit "Change password" %>
   </div>
-<% end %>
+</div>

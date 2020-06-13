@@ -11,7 +11,7 @@ defmodule GSGMSWeb.UserSessionControllerTest do
     test "renders login page", %{conn: conn} do
       conn = get(conn, Routes.user_session_path(conn, :new))
       response = html_response(conn, 200)
-      assert response =~ "<h1>Login</h1>"
+      assert response =~ "Login</h1>"
       assert response =~ "Login</a>"
       assert response =~ "Register</a>"
     end
@@ -61,7 +61,7 @@ defmodule GSGMSWeb.UserSessionControllerTest do
         })
 
       response = html_response(conn, 200)
-      assert response =~ "<h1>Login</h1>"
+      assert response =~ "Login</h1>"
       assert response =~ "Invalid e-mail or password"
     end
   end

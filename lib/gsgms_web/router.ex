@@ -26,14 +26,16 @@ defmodule GSGMSWeb.Router do
     post "/register", UserRegistrationController, :create
     get "/login", UserSessionController, :new
     post "/login", UserSessionController, :create
-    get "/auth/reset_password", UserResetPasswordController, :new
-    post "/auth/reset_password", UserResetPasswordController, :create
-    get "/auth/reset_password/:token", UserResetPasswordController, :edit
-    put "/auth/reset_password/:token", UserResetPasswordController, :update
+    get "/reset-password", UserResetPasswordController, :new
+    post "/reset-password", UserResetPasswordController, :create
+    get "/reset-password/:token", UserResetPasswordController, :edit
+    put "/reset-password/:token", UserResetPasswordController, :update
   end
 
   scope "/", GSGMSWeb do
     pipe_through [:browser, :require_authenticated_user]
+
+    live "/", PageLive, :index
 
     live "/players", PlayerLive.Index, :index
     live "/players/new", PlayerLive.Index, :new
@@ -61,8 +63,6 @@ defmodule GSGMSWeb.Router do
 
   scope "/", GSGMSWeb do
     pipe_through [:browser]
-
-    live "/", PageLive, :index
 
     delete "/users/logout", UserSessionController, :delete
     get "/users/confirm", UserConfirmationController, :new

@@ -1,4 +1,91 @@
-<h1>Listing Players</h1>
+<div class="space-y-4">
+  <div class="flex items-center justify-between">
+    <h1 class="text-4xl font-bold text-gray-800">Listing Players</h1>
+    <span class="">
+      <%= live_patch "New Player",
+        to: Routes.player_index_path(@socket, :new),
+        class: "bg-indigo-500 hover:bg-indigo-600 rounded shadow text-white font-semibold px-4 py-2"
+      %>
+    </span>
+  </div>
+
+  <div class="flex flex-col">
+    <div class="py-2 -my-2 overflow-x-auto sm:-mx-6 sm:px-6 lg:-mx-8 lg:px-8">
+      <div class="inline-block min-w-full overflow-hidden align-middle border-b border-gray-200 shadow sm:rounded-lg">
+        <table class="min-w-full">
+          <thead>
+            <tr>
+              <th class="px-6 py-3 text-xs font-medium leading-4 tracking-wider text-left text-gray-500 uppercase border-b border-gray-200 bg-gray-50">
+                Name
+              </th>
+              <th class="px-6 py-3 text-xs font-medium leading-4 tracking-wider text-left text-gray-500 uppercase border-b border-gray-200 bg-gray-50">
+                Code
+              </th>
+              <th class="px-6 py-3 text-xs font-medium leading-4 tracking-wider text-left text-gray-500 uppercase border-b border-gray-200 bg-gray-50">
+                Status
+              </th>
+              <th class="px-6 py-3 text-xs font-medium leading-4 tracking-wider text-right text-gray-500 uppercase border-b border-gray-200 bg-gray-50">
+                Actions
+              </th>
+            </tr>
+          </thead>
+          <tbody class="bg-white">
+          <%= for player <- @players do %>
+            <tr>
+              <td class="px-6 py-4 whitespace-no-wrap border-b border-gray-200">
+                <%= player.name %>
+              </td>
+              <td class="px-6 py-4 whitespace-no-wrap border-b border-gray-200">
+                <div class="text-sm leading-5 text-gray-900">
+                  <%= player.code %>
+                </div>
+              </td>
+              <td class="px-6 py-4 whitespace-no-wrap border-b border-gray-200">
+                <%= cond do %>
+                  <% is_nil(player.check_in) -> %>
+                    <span class="inline-flex px-2 text-xs font-semibold leading-5 text-yellow-800 bg-yellow-100 rounded-full">
+                      Not Attending
+                    </span>
+                  <% is_nil(player.check_out) -> %>
+                    <span class="inline-flex px-2 text-xs font-semibold leading-5 text-green-800 bg-green-100 rounded-full">
+                      Checked in
+                    </span>
+                  <% true -> %>
+                    <span class="inline-flex px-2 text-xs font-semibold leading-5 text-gray-800 bg-gray-100 rounded-full">
+                      Checked Out
+                    </span>
+                <% end %>
+              </td>
+              <td class="px-6 py-4 text-sm font-medium leading-5 text-right whitespace-no-wrap border-b border-gray-200">
+                <%= cond do %>
+                  <% is_nil(player.check_in) -> %>
+                    <button type="button" value="<%= player.id %>" phx-click="check-in">
+                      Check-in
+                    </button>
+                  <% is_nil(player.check_out) -> %>
+                    <button type="button" value="<%= player.id %>" phx-click="check-out">
+                      Check-out
+                    </button>
+                  <% true -> %>
+                <% end %>
+                <span class="text-indigo-600 hover:text-indigo-900">
+                  <%= live_redirect "Show", to: Routes.player_show_path(@socket, :show, player) %>
+                </span>
+                <span class="text-indigo-600 hover:text-indigo-900">
+                  <%= live_patch "Edit", to: Routes.player_index_path(@socket, :edit, player) %>
+                </span>
+                <span class="text-indigo-600 hover:text-indigo-900">
+                  <%= link "Delete", to: "#", phx_click: "delete", phx_value_id: player.id, data: [confirm: "Are you sure?"] %>
+                </span>
+              </td>
+            </tr>
+          <% end %>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
 
 <%= if @live_action in [:new, :edit] do %>
   <%= live_modal @socket, GSGMSWeb.PlayerLive.FormComponent,
@@ -8,49 +95,3 @@
     player: @player,
     return_to: Routes.player_index_path(@socket, :index) %>
 <% end %>
-
-<table>
-  <thead>
-    <tr>
-      <th>Name</th>
-      <th>Code</th>
-      <th>Check in</th>
-      <th>Check out</th>
-
-      <th></th>
-    </tr>
-  </thead>
-  <tbody id="players" phx-update="<%= @update_behavior %>">
-    <%= for player <- @players do %>
-      <tr id="player-<%= player.id %>">
-        <td><%= player.name %></td>
-        <td><%= player.code %></td>
-        <td>
-        <%= if is_nil player.check_in do %>
-          <button type="button" value="<%= player.id %>" phx-click="check-in">
-            Check-in
-          </button>
-        <% else %>
-          <%= player.check_in %>
-        <% end %>
-        </td>
-        <td>
-        <%= if is_nil player.check_out do %>
-          <button type="button" value="<%= player.id %>" phx-click="check-out">
-            Check-out
-          </button>
-        <% else %>
-          <%= player.check_out %>
-        <% end %>
-        </td>
-        <td>
-          <span><%= live_redirect "Show", to: Routes.player_show_path(@socket, :show, player) %></span>
-          <span><%= live_patch "Edit", to: Routes.player_index_path(@socket, :edit, player) %></span>
-          <span><%= link "Delete", to: "#", phx_click: "delete", phx_value_id: player.id, data: [confirm: "Are you sure?"] %></span>
-        </td>
-      </tr>
-    <% end %>
-  </tbody>
-</table>
-
-<span><%= live_patch "New Player", to: Routes.player_index_path(@socket, :new) %></span>

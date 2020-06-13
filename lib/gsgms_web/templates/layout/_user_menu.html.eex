@@ -1,10 +1,20 @@
-<ul>
+<ul class="flex space-x-4">
 <%= if @current_user do %>
-  <li><%= @current_user.email %></li>
-  <li><%= link "Settings", to: Routes.user_settings_path(@conn, :edit) %></li>
-  <li><%= link "Logout", to: Routes.user_session_path(@conn, :delete), method: :delete %></li>
+  <li class="px-2 py-1 text-indigo-800 bg-indigo-100 rounded shadow-sm">
+    <%= @current_user.email %>
+  </li>
+  <li class="px-2 py-1 rounded hover:bg-indigo-800">
+    <%= link "Settings", to: Routes.user_settings_path(@conn, :edit) %>
+  </li>
+  <li class="px-2 py-1 rounded hover:bg-indigo-800">
+    <%= link "Logout", to: Routes.user_session_path(@conn, :delete), method: :delete %>
+  </li>
 <% else %>
-  <li><%= link "Register", to: Routes.user_registration_path(@conn, :new) %></li>
-  <li><%= link "Login", to: Routes.user_session_path(@conn, :new) %></li>
+  <li class="px-2 py-1 rounded hover:bg-indigo-800">
+    <%= link "Login", to: Routes.user_session_path(@conn, :new) %>
+  </li>
+  <li class="px-2 py-1 rounded hover:bg-indigo-800">
+    <%= link "Register", to: Routes.user_registration_path(@conn, :new) %>
+  </li>
 <% end %>
 </ul>

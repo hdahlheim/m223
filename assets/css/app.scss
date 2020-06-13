@@ -1,12 +1,16 @@
 /* This file is for your main application css. */
-// @import "./phoenix.css";
+/* @import "./phoenix.css"; */
+@tailwind base;
 @import "../node_modules/nprogress/nprogress.css";
+
+@tailwind components;
 
 /* LiveView specific classes for your customizations */
 .invalid-feedback {
   color: #a94442;
   display: block;
-  margin: -1rem 0 2rem;
+  @apply text-sm;
+  /* margin: -1rem 0 2rem; */
 }
 
 .phx-no-feedback.invalid-feedback, .phx-no-feedback .invalid-feedback {
@@ -89,3 +93,5 @@
 .alert:empty {
   display: none;
 }
+
+@tailwind utilities;
