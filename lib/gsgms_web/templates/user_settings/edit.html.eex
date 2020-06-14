@@ -1,73 +1,88 @@
-<div class="max-w-3xl space-y-4 text-gray-800">
-  <h1 class="mt-4 text-4xl font-bold">Settings</h1>
-
-  <div class="flex justify-between px-6 py-4 bg-white rounded shadow">
-    <h3 class="text-lg font-semibold">Email</h3>
-    <div class="w-2/3">
-    <%= form_for @email_changeset, Routes.user_settings_path(@conn, :update_email), fn f -> %>
-      <%= if @email_changeset.action do %>
-        <div class="alert alert-danger">
-          <p>Oops, something went wrong! Please check the errors below.</p>
-        </div>
-      <% end %>
-      <div class="space-y-4">
-        <div class="space-y-2">
-          <%= label f, :email, class: "block text-semibold text-sm" %>
-          <%= text_input f, :email, required: true, class: "form-input w-full" %>
-          <%= error_tag f, :email %>
-        </div>
-
-        <div class="space-y-2">
-          <%= label f, :current_password, for: "current_password_for_email", class: "block text-semibold text-sm" %>
-          <%= password_input f, :current_password, required: true, name: "current_password", id: "current_password_for_email", class: "form-input w-full" %>
-          <%= error_tag f, :current_password %>
-        </div>
-
-        <div class="flex justify-end">
-          <span class="shadow-sm">
-          <%= submit "Save", class: "px-4 py-2 bg-indigo-500 rounded text-white shadow" %>
-          </span>
-        </div>
-      </div>
-    <% end %>
-    </div>
+<h1 class="mt-4 text-4xl font-bold text-gray-800">Settings</h1>
+<div class="grid grid-cols-3 gap-8 text-gray-800">
+  <div>
+    <h2 class="text-2xl"><%= @current_user.email %></h2>
   </div>
-
-  <div class="flex justify-between px-6 py-4 bg-white rounded shadow">
-    <h3 class="text-lg font-semibold">Change password</h3>
-    <div class="w-2/3">
-      <%= form_for @password_changeset, Routes.user_settings_path(@conn, :update_password), fn f -> %>
-        <%= if @password_changeset.action do %>
+  <div class="grid col-span-2 gap-4">
+    <div class="grid grid-cols-2 gap-8 px-6 py-4 bg-white rounded shadow">
+      <div>
+        <h3 class="text-lg font-semibold">Email</h3>
+        <p class="text-sm text-gray-600">
+          After changing your Email, you have to confirmit with the activation link.
+          The link is vaild for 24 Hours.
+        </p>
+      </div>
+      <div>
+      <%= form_for @email_changeset, Routes.user_settings_path(@conn, :update_email), fn f -> %>
+        <%= if @email_changeset.action do %>
           <div class="alert alert-danger">
             <p>Oops, something went wrong! Please check the errors below.</p>
           </div>
         <% end %>
-      <div class="space-y-4">
-        <div class="space-y-2">
-          <%= label f, :password, "New password", class: "block text-semibold text-sm"  %>
-          <%= password_input f, :password, required: true, class: "form-input w-full" %>
-          <%= error_tag f, :password %>
-        </div>
+        <div class="space-y-4">
+          <div class="space-y-2">
+            <%= label f, :email, class: "block text-semibold text-sm" %>
+            <%= text_input f, :email, required: true, class: "form-input w-full" %>
+            <%= error_tag f, :email %>
+          </div>
 
-        <div class="space-y-2">
-        <%= label f, :password_confirmation, "Confirm new password", class: "block text-semibold text-sm"  %>
-        <%= password_input f, :password_confirmation, required: true, class: "form-input w-full" %>
-        <%= error_tag f, :password_confirmation %>
-        </div>
+          <div class="space-y-2">
+            <%= label f, :current_password, for: "current_password_for_email", class: "block text-semibold text-sm" %>
+            <%= password_input f, :current_password, required: true, name: "current_password", id: "current_password_for_email", class: "form-input w-full" %>
+            <%= error_tag f, :current_password %>
+          </div>
 
-        <div class="space-y-2">
-        <%= label f, :current_password, for: "current_password_for_password", class: "block text-semibold text-sm"  %>
-        <%= password_input f, :current_password, required: true, name: "current_password", id: "current_password_for_password", class: "form-input w-full" %>
-        <%= error_tag f, :current_password %>
-        </div>
-
-        <div class="flex justify-end">
-          <span class="shadow-sm">
+          <div class="flex justify-end">
+            <span class="shadow-sm">
             <%= submit "Save", class: "px-4 py-2 bg-indigo-500 rounded text-white shadow" %>
-          <span>
+            </span>
+          </div>
         </div>
-      </div>
       <% end %>
+      </div>
+    </div>
+
+    <div class="grid grid-cols-2 gap-8 px-6 py-4 bg-white rounded shadow">
+      <div>
+        <h3 class="text-lg font-semibold">Change password</h3>
+        <p class="text-sm text-gray-600">
+          Changing your password will delete all your current sessions.
+        </p>
+      </div>
+      <div>
+        <%= form_for @password_changeset, Routes.user_settings_path(@conn, :update_password), fn f -> %>
+          <%= if @password_changeset.action do %>
+            <div class="alert alert-danger">
+              <p>Oops, something went wrong! Please check the errors below.</p>
+            </div>
+          <% end %>
+          <div class="space-y-4">
+            <div class="space-y-2">
+              <%= label f, :password, "New password", class: "block text-semibold text-sm"  %>
+              <%= password_input f, :password, required: true, class: "form-input w-full" %>
+              <%= error_tag f, :password %>
+            </div>
+
+            <div class="space-y-2">
+            <%= label f, :password_confirmation, "Confirm new password", class: "block text-semibold text-sm"  %>
+            <%= password_input f, :password_confirmation, required: true, class: "form-input w-full" %>
+            <%= error_tag f, :password_confirmation %>
+            </div>
+
+            <div class="space-y-2">
+            <%= label f, :current_password, for: "current_password_for_password", class: "block text-semibold text-sm"  %>
+            <%= password_input f, :current_password, required: true, name: "current_password", id: "current_password_for_password", class: "form-input w-full" %>
+            <%= error_tag f, :current_password %>
+            </div>
+
+            <div class="flex justify-end">
+              <span class="shadow-sm">
+                <%= submit "Save", class: "px-4 py-2 bg-indigo-500 rounded text-white shadow" %>
+              <span>
+            </div>
+          </div>
+        <% end %>
+      </div>
     </div>
   </div>
 </div>

@@ -11,7 +11,7 @@ defmodule GSGMSWeb.ModalComponent do
       phx-target="#<%= @id %>"
       phx-page-loading>
 
-      <div class="phx-modal-content">
+      <div class="max-w-xl rounded shadow-lg phx-modal-content">
         <%= live_patch raw("&times;"), to: @return_to, class: "phx-modal-close" %>
         <%= live_component @socket, @component, @opts %>
       </div>

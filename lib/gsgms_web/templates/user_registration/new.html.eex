@@ -24,16 +24,25 @@
 
         <div>
           <span class="shadow-sm">
-            <%= submit "Register", class: "w-full py-2 text-white bg-indigo-500 shadow rounded transition-colors ease-in duration-100 hover:bg-indigo-600" %>
+            <%=
+              submit "Register",
+              class: "w-full py-2 text-white bg-indigo-500 shadow rounded transition-colors ease-in duration-100 hover:bg-indigo-600"
+            %>
           </span>
         </div>
       </div>
     <% end %>
 
     <p class="text-center">
-      <%= link "Login", to: Routes.user_session_path(@conn, :new), class: "text-indigo-500 hover:text-indigo-400" %>
+      <%= link "Login",
+        to: Routes.user_session_path(@conn, :new),
+        class: "text-indigo-500 hover:text-indigo-400"
+      %>
       <span class="text-gray-300"> |</span>
-      <%= link "Forgot your password?", to: Routes.user_reset_password_path(@conn, :new), class: "text-indigo-500 hover:text-indigo-400" %>
+      <%= link "Forgot your password?",
+        to: Routes.user_reset_password_path(@conn, :new),
+        class: "text-indigo-500 hover:text-indigo-400"
+      %>
     </p>
   </div>
 </div>

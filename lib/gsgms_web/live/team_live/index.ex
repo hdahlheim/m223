@@ -17,8 +17,8 @@ defmodule GSGMSWeb.TeamLive.Index do
   end
 
   @impl true
-  def handle_info({:team_event, :created, team}, socket) do
-    {:noreply, assign(socket, :teams, [team])}
+  def handle_info({:team_event, :created, _team}, socket) do
+    {:noreply, assign(socket, :teams, list_teams())}
   end
 
   @impl true
