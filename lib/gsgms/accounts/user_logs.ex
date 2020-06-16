@@ -37,6 +37,10 @@ defmodule GSGMS.Accounts.UserLogs do
   """
   def get_user_log!(id), do: Repo.get!(UserLog, id)
 
+  def get_logs_for_user(id) do
+    Repo.all(from l in UserLog, where: l.user_id == ^id, order_by: l.created_at)
+  end
+
   @doc """
   Creates a user_log.
 

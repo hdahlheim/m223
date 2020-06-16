@@ -64,7 +64,7 @@ defmodule GSGMS.Tournament.Teams do
   def create_team(attrs \\ %{}) do
     %Team{}
     |> Team.changeset(attrs)
-    |> Repo.insert()
+    |> Repo.insert(stale_error_field: :version)
     |> broadcast(:team_created)
   end
 
@@ -83,7 +83,7 @@ defmodule GSGMS.Tournament.Teams do
   def update_team(%Team{} = team, attrs) do
     team
     |> Team.changeset(attrs)
-    |> Repo.update()
+    |> Repo.update(stale_error_field: :version)
     |> broadcast(:team_updated)
   end
 

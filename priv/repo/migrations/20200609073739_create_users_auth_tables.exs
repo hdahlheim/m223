@@ -6,8 +6,9 @@ defmodule GSGMS.Repo.Migrations.CreateUsersAuthTables do
 
     create table(:users, primary_key: false) do
       add :id, :binary_id, primary_key: true
-      add :name, :citext
+      add :name, :string
       add :email, :citext, null: false
+      add :role, :string
       add :hashed_password, :string, null: false
       add :confirmed_at, :naive_datetime
       add :version, :integer

@@ -211,6 +211,18 @@ defmodule GSGMS.Accounts.Users do
     end
   end
 
+  def change_user_name(user, attrs \\ %{}) do
+    User.name_changeset(user, attrs)
+  end
+
+  def update_user_name(user, attrs) do
+    changeset =
+      user
+      |> User.name_changeset(attrs)
+
+    Repo.update(changeset)
+  end
+
   ## Session
 
   @doc """

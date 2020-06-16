@@ -70,5 +70,22 @@ defmodule GSGMS.Tournament.PlayersTest do
       player = player_fixture()
       assert %Ecto.Changeset{} = Players.change_player(player)
     end
+
+    @tag :player
+    @tag :player_lock
+    test "Changing the player with stale information causes an error" do
+      {:ok, player} = Players.create_player(%{code: "42424242", name: "Malte Dahlheim"})
+
+      changeset_1 = Players.change_player(player, %{name: "Henning Dahlheim"})
+
+      changeset_2 = Players.change_player(player, %{name: "Frans Dahlheim"})
+
+      assert {:ok, %Player{}} = Repo.update(changeset_1, stale_error_field: :version)
+
+      assert {:error, %Ecto.Changeset{} = changeset} =
+               Repo.update(changeset_2, stale_error_field: :version)
+
+      IO.inspect(changeset)
+    end
   end
 end

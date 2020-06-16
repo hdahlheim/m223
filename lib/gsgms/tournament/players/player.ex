@@ -28,7 +28,7 @@ defmodule GSGMS.Tournament.Players.Player do
   end
 
   @doc false
-  def changeset(player, attrs, :update) do
+  def changeset(%__MODULE__{} = player, attrs, :update) do
     player
     |> cast(attrs, [:name, :code, :check_in, :check_out])
     |> validate_required([:name, :code])

@@ -21,6 +21,10 @@
   </div>
 
   <div>
+    <%= error_tag f, :version %>
+  </div>
+
+  <div>
     <%= submit "Save",
       phx_disable_with: "Saving...",
       class: "px-4 py-2 bg-indigo-500 rounded w-full text-white shadow"

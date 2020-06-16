@@ -2,9 +2,16 @@ defmodule GSGMSWeb.PlayerLive.Show do
   use GSGMSWeb, :live_view
 
   alias GSGMS.Tournament
+  alias GSGMS.Tournament.Players
+  alias GSGMS.Tournament.Teams
 
   @impl true
-  def mount(_params, _session, socket) do
+  def mount(_params, session, socket) do
+    socket =
+      socket
+      |> assign_defaults(session)
+      |> check_privilege(Players)
+
     {:ok, socket}
   end
 
@@ -12,10 +19,13 @@ defmodule GSGMSWeb.PlayerLive.Show do
   def handle_params(%{"id" => id}, _, socket) do
     if connected?(socket), do: Tournament.subscribe_to(:players, id)
 
-    {:noreply,
-     socket
-     |> assign(:page_title, page_title(socket.assigns.live_action))
-     |> assign(:player, Tournament.get_player!(id))}
+    socket =
+      socket
+      |> assign(:page_title, page_title(socket.assigns.live_action))
+      |> assign(:player, Tournament.get_player!(id))
+
+    IO.inspect(socket.assigns)
+    {:noreply, socket}
   end
 
   @impl true
@@ -30,21 +40,37 @@ defmodule GSGMSWeb.PlayerLive.Show do
 
   @impl true
   def handle_event("check-in", %{"value" => player_id}, socket) do
-    Tournament.check_in_player(player_id)
-    {:noreply, socket}
+    with {true, socket} <- has_privilege?(socket, :update, Players) do
+      Tournament.check_in_player(player_id)
+      {:noreply, socket}
+    else
+      {false, socket} ->
+        {:noreply, socket}
+    end
   end
 
   @impl true
   def handle_event("check-out", %{"value" => player_id}, socket) do
-    Tournament.check_out_player(player_id)
-    {:noreply, socket}
+    with {true, socket} <- has_privilege?(socket, :update, Players) do
+      Tournament.check_out_player(player_id)
+      {:noreply, socket}
+    else
+      {false, socket} ->
+        {:noreply, socket}
+    end
   end
 
   @impl true
   def handle_event("add-team", %{"team-id" => team_id}, socket) do
-    player_id = socket.assigns.player.id
-    Tournament.add_player_to_team(player_id, team_id)
-    {:noreply, socket}
+    with {true, socket} <- has_privilege?(socket, :update, Players),
+         {true, socket} <- has_privilege?(socket, :update, Teams) do
+      player_id = socket.assigns.player.id
+      Tournament.add_player_to_team(player_id, team_id)
+      {:noreply, socket}
+    else
+      {false, socket} ->
+        {:noreply, socket}
+    end
   end
 
   defp page_title(:show), do: "Show Player"

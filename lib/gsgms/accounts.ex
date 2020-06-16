@@ -1,5 +1,7 @@
 defmodule GSGMS.Accounts do
-  alias __MODULE__.Users
+  alias __MODULE__.{Users, UserLogs}
+
+  defdelegate get_logs_for_user(id), to: UserLogs
 
   ## Delegation to Users Module
   defdelegate get_user_by_email(email), to: Users
@@ -10,6 +12,9 @@ defmodule GSGMS.Accounts do
   defdelegate change_user_email(user, attrs \\ %{}), to: Users
   defdelegate apply_user_email(user, password, attrs), to: Users
   defdelegate update_user_email(user, token), to: Users
+
+  defdelegate change_user_name(user, attrs \\ %{}), to: Users
+  defdelegate update_user_name(user, attrs), to: Users
 
   defdelegate deliver_update_email_instructions(user, current_email, update_email_url_fun),
     to: Users

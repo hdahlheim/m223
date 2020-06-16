@@ -4,19 +4,18 @@ defmodule GSGMS.Tournament.Management do
   alias GSGMS.Tournament.PlayerLogs.PlayerLog
   alias GSGMS.Tournament.Players.Player
   alias GSGMS.Tournament.Teams
-  # alias Ecto.Query
   alias Ecto.Multi
 
   def add_player_to_team(player_id, team_id) when is_binary(player_id) and is_binary(team_id) do
     Multi.new()
-    |> Multi.run(:player, fn _, _ -> {:ok, Players.get_player!(player_id)} end)
-    |> Multi.run(:team, fn _, _ -> {:ok, Teams.get_team!(team_id)} end)
+    |> Multi.run(:player, fn _, _ -> {:ok, Players.get_player_with_associations!(player_id)} end)
+    |> Multi.run(:team, fn _, _ -> {:ok, Teams.get_team_with_players!(team_id)} end)
     |> Multi.update(:add_player_to_team, &player_assoc_team(&1.player, &1.team))
     |> Multi.insert(
       :log,
       &PlayerLog.changeset(%PlayerLog{}, %{
         player: &1.player,
-        description: "Player #{&1.player.name} was added to #{&1.team.name}"
+        description: "Player #{&1.player.name} was added to the team #{&1.team.name}"
       })
     )
     |> Repo.transaction()
@@ -33,7 +32,9 @@ defmodule GSGMS.Tournament.Management do
   def check_in_player(id, time) do
     Multi.new()
     |> Multi.run(:player, fn _, _ -> {:ok, Players.get_player_with_logs!(id)} end)
-    |> Multi.update(:add_check_in, &Player.changeset(&1.player, %{check_in: time}, :update))
+    |> Multi.update(:add_check_in, &Player.changeset(&1.player, %{check_in: time}, :update),
+      stale_error_field: :version
+    )
     |> Multi.insert(
       :log,
       &PlayerLog.changeset(%PlayerLog{}, %{
@@ -55,7 +56,9 @@ defmodule GSGMS.Tournament.Management do
   def check_out_player(id, time) do
     Multi.new()
     |> Multi.run(:player, fn _, _ -> {:ok, Players.get_player_with_logs!(id)} end)
-    |> Multi.update(:add_check_out, &Player.changeset(&1.player, %{check_out: time}, :update))
+    |> Multi.update(:add_check_out, &Player.changeset(&1.player, %{check_out: time}, :update),
+      stale_error_field: :version
+    )
     |> Multi.insert(
       :log,
       &PlayerLog.changeset(%PlayerLog{}, %{

@@ -10,6 +10,8 @@ defmodule GSGMS.Tournament.Players do
   alias GSGMS.Tournament.Players.Player
   alias GSGMS.Tournament.PlayerLogs.PlayerLog
 
+  @update_opts stale_error_field: :version, stale_error_message: "User information is stale"
+
   def topic, do: "players"
   def topic(id), do: "players:#{id}"
 
@@ -110,7 +112,7 @@ defmodule GSGMS.Tournament.Players do
   """
   def update_player(%Player{} = player, attrs) do
     Multi.new()
-    |> Multi.update(:player, Player.changeset(player, attrs, :update))
+    |> Multi.update(:player, Player.changeset(player, attrs, :update), @update_opts)
     |> Multi.insert(
       :log,
       &PlayerLog.changeset(%PlayerLog{}, %{

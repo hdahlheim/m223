@@ -4,7 +4,7 @@ defmodule GSGMSWeb.UserSettingsController do
   alias GSGMS.Accounts
   alias GSGMSWeb.UserAuth
 
-  plug :assign_email_and_password_changesets
+  plug :assign_user_changesets
 
   def edit(conn, _params) do
     render(conn, "edit.html")
@@ -62,11 +62,27 @@ defmodule GSGMSWeb.UserSettingsController do
     end
   end
 
-  defp assign_email_and_password_changesets(conn, _opts) do
+  def update_name(conn, %{"user" => user_params}) do
+    user = conn.assigns.current_user
+    IO.inspect(user_params)
+
+    case Accounts.update_user_name(user, user_params) do
+      {:ok, _user} ->
+        conn
+        |> put_flash(:info, "Name updated successfully.")
+        |> redirect(to: Routes.user_settings_path(conn, :edit))
+
+      {:error, changeset} ->
+        render(conn, "edit.html", name_changeset: changeset)
+    end
+  end
+
+  defp assign_user_changesets(conn, _opts) do
     user = conn.assigns.current_user
 
     conn
     |> assign(:email_changeset, Accounts.change_user_email(user))
     |> assign(:password_changeset, Accounts.change_user_password(user))
+    |> assign(:name_changeset, Accounts.change_user_name(user))
   end
 end

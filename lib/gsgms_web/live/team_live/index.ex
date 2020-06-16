@@ -6,13 +6,20 @@ defmodule GSGMSWeb.TeamLive.Index do
   alias GSGMS.Tournament.Teams.Team
 
   @impl true
-  def mount(_params, _session, socket) do
-    Tournament.subscribe_to(:teams)
-    {:ok, assign(socket, :teams, list_teams())}
+  def mount(_params, session, socket) do
+    if connected?(socket), do: Tournament.subscribe_to(:teams)
+
+    socket =
+      socket
+      |> assign_defaults(session)
+      |> assign(:teams, list_teams())
+
+    {:ok, socket}
   end
 
   @impl true
   def handle_params(params, _url, socket) do
+    socket = check_privilege(socket, Teams)
     {:noreply, apply_action(socket, socket.assigns.live_action, params)}
   end
 
@@ -46,10 +53,20 @@ defmodule GSGMSWeb.TeamLive.Index do
 
   @impl true
   def handle_event("delete", %{"id" => id}, socket) do
-    team = Tournament.get_team!(id)
-    {:ok, _} = Teams.delete_team(team)
+    with {true, socket} <- has_privilege?(socket, :delete, Teams) do
+      team = Tournament.get_team!(id)
+      {:ok, _} = Teams.delete_team(team)
 
-    {:noreply, assign(socket, :teams, list_teams())}
+      socket =
+        socket
+        |> assign(:teams, list_teams())
+        |> put_flash(:info, "Team #{team.name} deleted")
+
+      {:noreply, socket}
+    else
+      {false, socket} ->
+        {:noreply, socket}
+    end
   end
 
   defp list_teams do

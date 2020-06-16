@@ -2,10 +2,16 @@ defmodule GSGMSWeb.TeamLive.Show do
   use GSGMSWeb, :live_view
 
   alias GSGMS.Tournament
+  alias GSGMS.Tournament.Teams
 
   @impl true
-  def mount(_params, _session, socket) do
-    socket = assign(socket, :players, Tournament.get_players_without_team())
+  def mount(_params, session, socket) do
+    socket =
+      socket
+      |> assign_defaults(session)
+      |> check_privilege(Teams)
+      |> assign(:players, Tournament.get_players_without_team())
+
     {:ok, socket}
   end
 

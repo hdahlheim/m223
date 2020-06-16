@@ -3,6 +3,7 @@ defmodule GSGMS.Accounts.Users.User do
   import Ecto.Changeset
 
   alias GSGMS.Accounts.UserLogs.UserLog
+  # alias GSGMS.Accounts.Roles.Role
 
   @derive {Inspect, except: [:password]}
   @primary_key {:id, :binary_id, autogenerate: true}
@@ -11,11 +12,13 @@ defmodule GSGMS.Accounts.Users.User do
   schema "users" do
     field :name, :string
     field :email, :string
+    field :role, :string, default: "Frontdesk"
     field :password, :string, virtual: true
     field :hashed_password, :string
     field :confirmed_at, :naive_datetime
-    has_many :logs, UserLog
     field :version, :integer, default: 1
+    has_many :logs, UserLog
+    # belongs_to :role, Role
 
     timestamps()
   end
@@ -30,7 +33,7 @@ defmodule GSGMS.Accounts.Users.User do
   """
   def registration_changeset(user, attrs) do
     user
-    |> cast(attrs, [:email, :password])
+    |> cast(attrs, [:email, :password, :role])
     |> validate_email()
     |> validate_password()
   end
@@ -70,8 +73,8 @@ defmodule GSGMS.Accounts.Users.User do
   def email_changeset(user, attrs) do
     user
     |> cast(attrs, [:email])
-    |> optimistic_lock(:version)
     |> validate_email()
+    |> optimistic_lock(:version)
     |> case do
       %{changes: %{email: _}} = changeset -> changeset
       %{} = changeset -> add_error(changeset, :email, "did not change")
@@ -87,6 +90,26 @@ defmodule GSGMS.Accounts.Users.User do
     |> validate_confirmation(:password, message: "does not match password")
     |> validate_password()
     |> optimistic_lock(:version)
+  end
+
+  def name_changeset(user, attrs) do
+    user
+    |> cast(attrs, [:name])
+    |> optimistic_lock(:version)
+    |> case do
+      %{changes: %{name: _}} = changeset -> changeset
+      %{} = changeset -> add_error(changeset, :name, "did not change")
+    end
+  end
+
+  def role_changeset(user, attrs) do
+    user
+    |> cast(attrs, [:role])
+    |> optimistic_lock(:version)
+    |> case do
+      %{changes: %{role: _}} = changeset -> changeset
+      %{} = changeset -> add_error(changeset, :role, "did not change")
+    end
   end
 
   @doc """

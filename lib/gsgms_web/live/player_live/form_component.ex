@@ -36,7 +36,14 @@ defmodule GSGMSWeb.PlayerLive.FormComponent do
          |> push_redirect(to: socket.assigns.return_to)}
 
       {:error, %Ecto.Changeset{} = changeset} ->
-        {:noreply, assign(socket, :changeset, changeset)}
+        IO.inspect(changeset)
+
+        socket =
+          socket
+          |> assign(:changeset, changeset)
+          |> put_flash(:error, "Player updated failed")
+
+        {:noreply, socket}
     end
   end
 

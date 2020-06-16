@@ -52,13 +52,8 @@ defmodule GSGMSWeb.Router do
     get "/account/settings", UserSettingsController, :edit
     put "/account/settings/update_password", UserSettingsController, :update_password
     put "/account/settings/update_email", UserSettingsController, :update_email
+    put "/account/settings/update_name", UserSettingsController, :update_name
     get "/account/settings/confirm_email/:token", UserSettingsController, :confirm_email
-
-    # live "/users", UserLive.Index, :index
-    # live "/users/new", UserLive.Index, :new
-    # live "/users/:id/edit", UserLive.Index, :edit
-    # live "/users/:id", UserLive.Show, :show
-    # live "/users/:id/show/edit", UserLive.Show, :edit
   end
 
   scope "/", GSGMSWeb do
