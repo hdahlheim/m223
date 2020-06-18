@@ -53,7 +53,7 @@ defmodule GSGMSWeb.TeamLive.Index do
 
   @impl true
   def handle_event("delete", %{"id" => id}, socket) do
-    with {true, socket} <- has_privilege?(socket, :delete, Teams) do
+    with {:ok, socket} <- has_privilege(socket, :delete, Teams) do
       team = Tournament.get_team!(id)
       {:ok, _} = Teams.delete_team(team)
 
@@ -64,7 +64,7 @@ defmodule GSGMSWeb.TeamLive.Index do
 
       {:noreply, socket}
     else
-      {false, socket} ->
+      {_, socket} ->
         {:noreply, socket}
     end
   end

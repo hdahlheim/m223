@@ -40,35 +40,35 @@ defmodule GSGMSWeb.PlayerLive.Show do
 
   @impl true
   def handle_event("check-in", %{"value" => player_id}, socket) do
-    with {true, socket} <- has_privilege?(socket, :update, Players) do
+    with {:ok, socket} <- has_privilege(socket, :update, Players) do
       Tournament.check_in_player(player_id)
       {:noreply, socket}
     else
-      {false, socket} ->
+      {_, socket} ->
         {:noreply, socket}
     end
   end
 
   @impl true
   def handle_event("check-out", %{"value" => player_id}, socket) do
-    with {true, socket} <- has_privilege?(socket, :update, Players) do
+    with {:ok, socket} <- has_privilege(socket, :update, Players) do
       Tournament.check_out_player(player_id)
       {:noreply, socket}
     else
-      {false, socket} ->
+      {_, socket} ->
         {:noreply, socket}
     end
   end
 
   @impl true
   def handle_event("add-team", %{"team-id" => team_id}, socket) do
-    with {true, socket} <- has_privilege?(socket, :update, Players),
-         {true, socket} <- has_privilege?(socket, :update, Teams) do
+    with {:ok, socket} <- has_privilege(socket, :update, Players),
+         {:ok, socket} <- has_privilege(socket, :update, Teams) do
       player_id = socket.assigns.player.id
       Tournament.add_player_to_team(player_id, team_id)
       {:noreply, socket}
     else
-      {false, socket} ->
+      {_, socket} ->
         {:noreply, socket}
     end
   end

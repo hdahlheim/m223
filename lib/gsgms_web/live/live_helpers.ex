@@ -48,15 +48,15 @@ defmodule GSGMSWeb.LiveHelpers do
     end
   end
 
-  def has_privilege?(socket, action, resource) do
+  def has_privilege(socket, action, resource) do
     if check(action, socket.assigns.current_user, resource) do
-      {true, socket}
+      {:ok, socket}
     else
       socket =
         socket
         |> LiveView.put_flash(:error, "You're not authorized to do that!")
 
-      {false, socket}
+      {:error, socket}
     end
   end
 

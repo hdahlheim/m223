@@ -7,7 +7,6 @@ defmodule GSGMSWeb.PlayerLive.Index do
 
   @impl true
   def mount(_params, session, socket) do
-    IO.inspect({session, socket})
     if connected?(socket), do: Tournament.subscribe_to(:players)
 
     socket =
@@ -65,7 +64,7 @@ defmodule GSGMSWeb.PlayerLive.Index do
 
   @impl true
   def handle_event("delete", %{"id" => id}, socket) do
-    with {true, socket} <- has_privilege?(socket, :delete, Players) do
+    with {:ok, socket} <- has_privilege(socket, :delete, Players) do
       player = Players.get_player!(id)
       {:ok, _} = Players.delete_player(player)
 
@@ -75,29 +74,29 @@ defmodule GSGMSWeb.PlayerLive.Index do
 
       {:noreply, socket}
     else
-      {false, socket} ->
+      {_, socket} ->
         {:noreply, socket}
     end
   end
 
   @impl true
   def handle_event("check-in", %{"value" => player_id}, socket) do
-    with {true, socket} <- has_privilege?(socket, :update, Players) do
+    with {:ok, socket} <- has_privilege(socket, :update, Players) do
       Tournament.check_in_player(player_id)
       {:noreply, socket}
     else
-      {false, socket} ->
+      {_, socket} ->
         {:noreply, socket}
     end
   end
 
   @impl true
   def handle_event("check-out", %{"value" => player_id}, socket) do
-    with {true, socket} <- has_privilege?(socket, :update, Players) do
+    with {:ok, socket} <- has_privilege(socket, :update, Players) do
       Tournament.check_out_player(player_id)
       {:noreply, socket}
     else
-      {false, socket} ->
+      {_, socket} ->
         {:noreply, socket}
     end
   end
