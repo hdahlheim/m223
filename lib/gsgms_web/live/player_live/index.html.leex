@@ -61,11 +61,21 @@
               <td class="px-6 py-4 text-sm font-medium leading-5 text-right whitespace-no-wrap border-b border-gray-200">
                 <%= cond do %>
                   <% is_nil(player.check_in) -> %>
-                    <button type="button" value="<%= player.id %>" phx-click="check-in">
+                    <button
+                      type="button"
+                      value="<%= player.id %>"
+                      phx-click="check-in"
+                      class="px-3 py-1 font-semibold text-white text-green-600 bg-green-200 rounded"
+                      >
                       Check-in
                     </button>
                   <% is_nil(player.check_out) -> %>
-                    <button type="button" value="<%= player.id %>" phx-click="check-out">
+                    <button
+                      type="button"
+                      value="<%= player.id %>"
+                      phx-click="check-out"
+                      class="px-3 py-1 font-semibold text-yellow-600 bg-yellow-200 rounded"
+                      >
                       Check-out
                     </button>
                   <% true -> %>

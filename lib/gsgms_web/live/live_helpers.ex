@@ -1,6 +1,6 @@
 defmodule GSGMSWeb.LiveHelpers do
   import Phoenix.LiveView.Helpers
-  import GSGMS.Accounts.Authorization
+  alias GSGMS.Accounts
   alias Phoenix.LiveView
 
   @doc """
@@ -23,12 +23,15 @@ defmodule GSGMSWeb.LiveHelpers do
     live_component(socket, GSGMSWeb.ModalComponent, modal_opts)
   end
 
+  @doc """
+  Assigns the default values needed for every live view connection.
+  """
   def assign_defaults(socket, session) do
-    user = Map.get(session, "current_user")
+    user_token = Map.get(session, "user_token")
 
     socket =
       LiveView.assign_new(socket, :current_user, fn ->
-        user
+        Accounts.get_user_by_session_token(user_token)
       end)
 
     if(socket.assigns.current_user) do
@@ -38,6 +41,9 @@ defmodule GSGMSWeb.LiveHelpers do
     end
   end
 
+  @doc """
+  Makes sure that the current user of the chanel has the correct accessright.
+  """
   def check_privilege(socket, resource) do
     if check(socket.assigns.live_action, socket.assigns.current_user, resource) do
       socket
@@ -48,6 +54,10 @@ defmodule GSGMSWeb.LiveHelpers do
     end
   end
 
+  @doc """
+  Checks the accessright for actions that happen after the establishment of
+  the connection.
+  """
   def has_privilege(socket, action, resource) do
     if check(action, socket.assigns.current_user, resource) do
       {:ok, socket}
@@ -60,20 +70,28 @@ defmodule GSGMSWeb.LiveHelpers do
     end
   end
 
+  @doc false
   defp check(action, user, resource) when action in [:index, :show] do
-    can(user) |> read?(resource)
+    Accounts.can(user)
+    |> Accounts.read?(resource)
   end
 
+  @doc false
   defp check(action, user, resource) when action in [:new, :create] do
-    can(user) |> create?(resource)
+    Accounts.can(user)
+    |> Accounts.create?(resource)
   end
 
+  @doc false
   defp check(action, user, resource) when action in [:edit, :update] do
-    can(user) |> update?(resource)
+    Accounts.can(user)
+    |> Accounts.update?(resource)
   end
 
+  @doc false
   defp check(:delete, user, resource) do
-    can(user) |> delete?(resource)
+    Accounts.can(user)
+    |> Accounts.delete?(resource)
   end
 
   defp check(_action, _user, _resource), do: false

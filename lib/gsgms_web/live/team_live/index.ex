@@ -33,6 +33,24 @@ defmodule GSGMSWeb.TeamLive.Index do
     {:noreply, socket}
   end
 
+  @impl true
+  def handle_event("delete", %{"id" => id}, socket) do
+    with {:ok, socket} <- has_privilege(socket, :delete, Teams) do
+      team = Tournament.get_team!(id)
+      {:ok, _} = Tournament.delete_team(team)
+
+      socket =
+        socket
+        |> assign(:teams, list_teams())
+        |> put_flash(:info, "Team #{team.name} deleted")
+
+      {:noreply, socket}
+    else
+      {_, socket} ->
+        {:noreply, socket}
+    end
+  end
+
   defp apply_action(socket, :edit, %{"id" => id}) do
     socket
     |> assign(:page_title, "Edit Team")
@@ -49,24 +67,6 @@ defmodule GSGMSWeb.TeamLive.Index do
     socket
     |> assign(:page_title, "Listing Teams")
     |> assign(:team, nil)
-  end
-
-  @impl true
-  def handle_event("delete", %{"id" => id}, socket) do
-    with {:ok, socket} <- has_privilege(socket, :delete, Teams) do
-      team = Tournament.get_team!(id)
-      {:ok, _} = Teams.delete_team(team)
-
-      socket =
-        socket
-        |> assign(:teams, list_teams())
-        |> put_flash(:info, "Team #{team.name} deleted")
-
-      {:noreply, socket}
-    else
-      {_, socket} ->
-        {:noreply, socket}
-    end
   end
 
   defp list_teams do

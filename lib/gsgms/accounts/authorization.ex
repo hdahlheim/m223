@@ -25,6 +25,10 @@ defmodule GSGMS.Accounts.Authorization do
     |> all(Teams)
   end
 
+  def can(_) do
+    %__MODULE__{}
+  end
+
   def create?(%__MODULE__{} = role, resource) do
     Map.get(role.create, resource, false)
   end

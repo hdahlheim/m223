@@ -12,7 +12,6 @@ defmodule GSGMSWeb.PlayerLive.Index do
     socket =
       socket
       |> assign_defaults(session)
-      |> check_privilege(Players)
       |> assign(players: list_players())
 
     {:ok, socket}
@@ -44,29 +43,11 @@ defmodule GSGMSWeb.PlayerLive.Index do
     {:noreply, socket}
   end
 
-  defp apply_action(socket, :edit, %{"id" => id}) do
-    socket
-    |> assign(:page_title, "Edit Player")
-    |> assign(:player, Players.get_player!(id))
-  end
-
-  defp apply_action(socket, :new, _params) do
-    socket
-    |> assign(:page_title, "New Player")
-    |> assign(:player, %Player{})
-  end
-
-  defp apply_action(socket, :index, _params) do
-    socket
-    |> assign(:page_title, "Listing Players")
-    |> assign(:player, nil)
-  end
-
   @impl true
   def handle_event("delete", %{"id" => id}, socket) do
     with {:ok, socket} <- has_privilege(socket, :delete, Players) do
-      player = Players.get_player!(id)
-      {:ok, _} = Players.delete_player(player)
+      player = Tournament.get_player!(id)
+      {:ok, _} = Tournament.delete_player(player)
 
       socket =
         assign(socket, players: list_players())
@@ -101,7 +82,25 @@ defmodule GSGMSWeb.PlayerLive.Index do
     end
   end
 
+  defp apply_action(socket, :edit, %{"id" => id}) do
+    socket
+    |> assign(:page_title, "Edit Player")
+    |> assign(:player, Tournament.get_player!(id))
+  end
+
+  defp apply_action(socket, :new, _params) do
+    socket
+    |> assign(:page_title, "New Player")
+    |> assign(:player, %Player{})
+  end
+
+  defp apply_action(socket, :index, _params) do
+    socket
+    |> assign(:page_title, "Listing Players")
+    |> assign(:player, nil)
+  end
+
   defp list_players do
-    Tournament.get_players()
+    Tournament.list_players()
   end
 end

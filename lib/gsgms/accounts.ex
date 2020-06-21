@@ -1,9 +1,19 @@
 defmodule GSGMS.Accounts do
-  alias __MODULE__.{Users, UserLogs}
+  alias __MODULE__.{Authorization, Users, UserLogs}
 
-  defdelegate get_logs_for_user(id), to: UserLogs
+  @moduledoc """
+  Accounts Facade
+  """
+
+  ## Delegation to Auth Module
+  defdelegate can(user), to: Authorization
+  defdelegate create?(role, resource), to: Authorization
+  defdelegate read?(role, resource), to: Authorization
+  defdelegate update?(role, resource), to: Authorization
+  defdelegate delete?(role, resource), to: Authorization
 
   ## Delegation to Users Module
+  defdelegate get_logs_for_user(id), to: UserLogs
   defdelegate get_user_by_email(email), to: Users
   defdelegate get_user_by_email_and_password(email, password), to: Users
   defdelegate get_user!(id), to: Users

@@ -1,6 +1,6 @@
 defmodule GSGMS.Tournament.Teams do
   @moduledoc """
-  The Games.Teams context.
+  The Tournament.Teams context.
   """
 
   import Ecto.Query, warn: false

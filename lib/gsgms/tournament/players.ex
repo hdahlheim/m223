@@ -1,6 +1,6 @@
 defmodule GSGMS.Tournament.Players do
   @moduledoc """
-  The Games.Players context.
+  The Tournament.Players context.
   """
 
   import Ecto.Query, warn: false
@@ -45,12 +45,14 @@ defmodule GSGMS.Tournament.Players do
   end
 
   def list_players_without_team do
-    query =
-      from p in Player,
-        where: is_nil(p.team_id),
-        select: %{name: p.name, id: p.id}
+    players_where_team_is_nill()
+    |> Repo.all()
+  end
 
-    Repo.all(query)
+  defp players_where_team_is_nill do
+    from p in Player,
+      where: is_nil(p.team_id),
+      select: %{name: p.name, id: p.id}
   end
 
   @doc """
@@ -68,9 +70,15 @@ defmodule GSGMS.Tournament.Players do
 
   """
   def get_player!(id), do: Repo.get!(Player, id)
-  def get_player_with_logs!(id), do: Repo.get!(Player, id) |> Repo.preload(:logs)
-  def get_player_with_team!(id), do: Repo.get!(Player, id) |> Repo.preload(:team)
-  def get_player_with_associations!(id), do: Repo.get!(Player, id) |> Repo.preload([:team, :logs])
+
+  def get_player_with_logs!(id),
+    do: Repo.get!(Player, id) |> Repo.preload(:logs)
+
+  def get_player_with_team!(id),
+    do: Repo.get!(Player, id) |> Repo.preload(:team)
+
+  def get_player_with_associations!(id),
+    do: Repo.get!(Player, id) |> Repo.preload([:team, :logs])
 
   @doc """
   Creates a player.
